@@ -1,6 +1,9 @@
 objects = mprotect_perf.o
 bins = mprotect_perf
 
+%.o : %.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
 $(objects): %.o: %.c
 
 mprotect_perf: mprotect_perf.o

@@ -1,18 +1,13 @@
-DEPDIR := .deps
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
+SRCS := mprotect_perf.c
+OBJS := $(SRCS:%.c=%.o)
 
-COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+%.o: %.c
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-%.o : %.c
-%.o : %.c $(DEPDIR)/%.d | $(DEPDIR)
-	$(COMPILE.c) $(OUTPUT_OPTION) $<
+all: $(OBJS) mprotect_perf
 
-$(DEPDIR): ; @mkdir -p $@
-
-DEPFILES := $(SRCS:%.c=$(DEPDIR)/%.d)
-$(DEPFILES):
-
-include $(wildcard $(DEPFILES))
+mprotect_perf: mprotect_perf.o
+	$(CC) -o $@ mprotect_perf.o $(CFLAGS)
 
 default: mprotect_perf
 
@@ -23,4 +18,4 @@ benchmark: mprotect_perf
 	done
 
 clean:
-	rm -f $(objects) mprotect_perf
+	rm -f $(OBJS) mprotect_perf

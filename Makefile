@@ -1,15 +1,18 @@
-objects = mprotect_perf.o
-bins = mprotect_perf
+DEPDIR := .deps
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
+
+COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 
 %.o : %.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+%.o : %.c $(DEPDIR)/%.d | $(DEPDIR)
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
 
-$(objects): %.o: %.c
+$(DEPDIR): ; @mkdir -p $@
 
-mprotect_perf: mprotect_perf.o
+DEPFILES := $(SRCS:%.c=$(DEPDIR)/%.d)
+$(DEPFILES):
 
-clean:
-	rm -f $(objects) mprotect_perf
+include $(wildcard $(DEPFILES))
 
 default: mprotect_perf
 
@@ -18,3 +21,6 @@ benchmark: mprotect_perf
 		export PAGE_MULTIPLE=$$number; \
 		time ./mprotect_perf; \
 	done
+
+clean:
+	rm -f $(objects) mprotect_perf

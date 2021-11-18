@@ -140,6 +140,9 @@ int main(int argc, char *argv[]) {
     code.mem_block = alloc_exec_mem(mem_size);
     code.mem_size = mem_size;
     codeblock_t *cb = &code;
+    CB_MARK_WRITEABLE(cb);
+    memset(code.mem_block, 0xCC, mem_size);
+    CB_MARK_EXECUTABLE(cb);
 
     for (uint32_t i = 0; i < iterations; i++) {
         CB_MARK_WRITEABLE(cb);

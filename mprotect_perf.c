@@ -42,7 +42,7 @@ static uint8_t *align_ptr(uint8_t *ptr, uint32_t multiple)
 
 #define CB_MARK_EXECUTABLE(cb) do { \
     if (mprotect(cb->mem_block, cb->mem_size, PROT_READ | PROT_EXEC)) { \
-        fprintf(stderr, "Couldn't make JIT page (%p) writeable, errno: %s", (void *)cb->mem_block, strerror(errno)); \
+        fprintf(stderr, "Couldn't make JIT page (%p) executable, errno: %s", (void *)cb->mem_block, strerror(errno)); \
         abort(); \
     } \
 } while(0);
